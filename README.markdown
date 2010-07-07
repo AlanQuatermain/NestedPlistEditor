@@ -1,12 +1,14 @@
-h1=. NestedPlistEditor
+NestedPlistEditor
+=================
 
-p=. Version 0.9 -- July 7 2010
+Version 0.9 -- July 7 2010
 
-p=. By "Jim Dovey":mailto:jimdovey@mac.com
+By "Jim Dovey":mailto:jimdovey@mac.com
 
-*Requires Mac OS X 10.6 or later to run.*
+**Requires Mac OS X 10.6 or later to run.**
 
-h2. Introduction
+Introduction
+------------
 
 This project implements something very similar to the 'defaults' command line tool, with one major difference: it supports nested properties.
 
@@ -26,16 +28,16 @@ Unlike the other set/array operators, we can also use this to set values. To cha
 
     defaults-nested write com.mycompany.myapp Players.@index(5).Score 32768
 
-h3. Real-World Examples
+### Real-World Examples
 
 This was written to support creating an Xcode build script for my project whereby I could automatically update a static text 'Version' attribute in my app's preferences bundle. Reading the CFBundleShortVersionString from my Info.plist is simple enough, but writing it was problematic since the settings bundle's Root.plist uses nesting.
 
 Placing a copy of this application at my project's root folder and installing the following as a *_ZSH_* run-script build phase allows me to do this.
 
     typeset INFO_PLIST=`echo ${INFOPLIST_FILE} | cut -d. -f1`
-
+    
 	"${PROJECT_DIR}/defaults-nested" write "${PROJECT_DIR}/Settings.bundle/Root" "PreferenceSpecifiers.@index(0).DefaultValue" `defaults read "${PROJECT_DIR}/${INFO_PLIST}" CFBundleShortVersionString`
 
 Note that it is important that you use ZSH for this-- the 'typeset' command comes from there.
 
-In my example the version number is the first item in my settings, so I use <code>@index(0)</code>. You'll need to change that to suit your own setup.
+In my example the version number is the first item in my settings, so I use `@index(0)`. You'll need to change that to suit your own setup.
