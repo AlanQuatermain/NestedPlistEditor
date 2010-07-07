@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38B9C93C11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B9C93B11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.m */; };
 		8DD76F9A0486AA7600D96B5E /* NestedPlistEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* NestedPlistEditor.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 		8DD76F9F0486AA7600D96B5E /* NestedPlistEditor.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859EA3029092ED04C91782 /* NestedPlistEditor.1 */; };
@@ -29,6 +30,8 @@
 		08FB7796FE84155DC02AAC07 /* NestedPlistEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NestedPlistEditor.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32A70AAB03705E1F00C91783 /* NestedPlistEditor_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NestedPlistEditor_Prefix.pch; sourceTree = "<group>"; };
+		38B9C93A11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MyKVCKeyPathBreaker.h"; sourceTree = "<group>"; };
+		38B9C93B11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MyKVCKeyPathBreaker.m"; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* defaults-nested */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "defaults-nested"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6859EA3029092ED04C91782 /* NestedPlistEditor.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = NestedPlistEditor.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,6 +64,8 @@
 			children = (
 				32A70AAB03705E1F00C91783 /* NestedPlistEditor_Prefix.pch */,
 				08FB7796FE84155DC02AAC07 /* NestedPlistEditor.m */,
+				38B9C93A11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.h */,
+				38B9C93B11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -136,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* NestedPlistEditor.m in Sources */,
+				38B9C93C11E4E86200B49797 /* NSString+MyKVCKeyPathBreaker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

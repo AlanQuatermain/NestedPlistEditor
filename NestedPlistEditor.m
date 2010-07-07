@@ -38,6 +38,7 @@
 
 #import <Foundation/Foundation.h>
 #import <sysexits.h>
+#import "NSString+MyKVCKeyPathBreaker.h"
 
 static void usage(FILE *pFile) __dead2;
 
@@ -114,6 +115,7 @@ id GetNestedValue( id rootObject, NSMutableArray * comps )
 		NSMutableString * path = [NSMutableString string];
 		__block NSUInteger indexerLocation = NSNotFound;
 		__block NSUInteger arrayIndexValue = NSNotFound;
+		__block NSString * escapedNextKey = nil;
 		
 		[comps enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
 			// check its prefix and length -- 8 characters for '@index()', should be 9 or more in total
@@ -122,6 +124,13 @@ id GetNestedValue( id rootObject, NSMutableArray * comps )
 				// parse the argument value -- we know exactly where it is now
 				arrayIndexValue = (NSUInteger)[[obj substringWithRange: NSMakeRange(7, [obj length] - 8)] integerValue];
 				indexerLocation = idx+1;	// store this location so we can trim the comps later
+				*stop = YES;
+			}
+			else if ([obj rangeOfString: @"."].location != NSNotFound)
+			{
+				// grab this item and use it in -valueForKey: instead of -valueForKeyPath:, so the periods are processed
+				escapedNextKey = obj;
+				indexerLocation = idx+1;
 				*stop = YES;
 			}
 			else
@@ -159,6 +168,12 @@ id GetNestedValue( id rootObject, NSMutableArray * comps )
 			current = [current objectAtIndex: arrayIndexValue];
 		}
 		
+		if ( escapedNextKey != nil )
+		{
+			// use -valueForKey instead of valueForKeyPath: for keys which contain (valid) period characters
+			current = [current valueForKey: escapedNextKey];
+		}
+		
 		// if we passed the end of the array, we go out
 		if ( indexerLocation >= ([comps count]) )
 			break;
@@ -173,7 +188,7 @@ id GetNestedValue( id rootObject, NSMutableArray * comps )
 
 id CopyNestedPreferenceValue( NSString * key, NSString * domain, CFStringRef user, CFStringRef host )
 {
-	NSMutableArray * comps = [[key componentsSeparatedByString: @"."] mutableCopy];
+	NSMutableArray * comps = [[key my_componentsSeparatedByKVCPathDelimiters] mutableCopy];
 	
 	// grab the root item
 	id rootObject = NSMakeCollectable(CFPreferencesCopyValue((CFStringRef)[comps objectAtIndex: 0], (CFStringRef)domain, user, host));
@@ -183,7 +198,7 @@ id CopyNestedPreferenceValue( NSString * key, NSString * domain, CFStringRef use
 		// this is all we want
 		return ( rootObject );
 	}
-	else if ( [key rangeOfString: @"@index"].location == NSNotFound )
+	else if ( ([key rangeOfString: @"@index"].location == NSNotFound) && ([key rangeOfString: @"\\."].location == NSNotFound) )
 	{
 		// no array index specifications -- use plain old KVC
 		NSString * path = [[comps subarrayWithRange: NSMakeRange(1, [comps count]-1)] componentsJoinedByString: @"."];
@@ -200,7 +215,7 @@ id CopyEditableRootForNestedValue( NSString * key, NSString * domain, CFStringRe
 	*parentToChange = nil;
 	*oldValue = nil;
 	
-	NSMutableArray * comps = [[key componentsSeparatedByString: @"."] mutableCopy];
+	NSMutableArray * comps = [[key my_componentsSeparatedByKVCPathDelimiters] mutableCopy];
 	
 	// grab the root item
 	id rootObject = NSMakeCollectable(CFPreferencesCopyValue((CFStringRef)[comps objectAtIndex: 0], (CFStringRef)domain, user, host));
@@ -239,7 +254,7 @@ id CopyEditableRootForNestedValue( NSString * key, NSString * domain, CFStringRe
 
 BOOL SetValueForIndexableKey( id parent, NSString * fullKeyPath, id value )
 {
-	NSString * key = [fullKeyPath substringFromIndex:[fullKeyPath rangeOfString:@"." options:NSBackwardsSearch].location+1];
+	NSString * key = [[fullKeyPath my_componentsSeparatedByKVCPathDelimiters] lastObject];
 	
 	if ( ([key hasPrefix: @"@index"]) && ([key length] > 8) )
 	{
